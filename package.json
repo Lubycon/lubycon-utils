@@ -1,19 +1,22 @@
 {
   "name": "@lubycon/utils",
+  "description": "Utils which uses in Lubycon",
   "private": false,
   "sideEffects": false,
   "version": "1.0.2",
-  "description": "",
   "keywords": [
     "utils"
   ],
-  "main": "dist/lubycon-utils.umd.js",
-  "module": "dist/lubycon-utils.es5.js",
-  "typings": "dist/types/lubycon-utils.d.ts",
+  "publishConfig": {
+    "main": "dist/lubycon-utils.umd.js",
+    "module": "dist/lubycon-utils.es5.js",
+    "types": "dist/types/lubycon-utils.d.ts",
+    "access": "public"
+  },
   "files": [
     "dist"
   ],
-  "author": "lubycon <lubycon@gmail.com>",
+  "author": "Lubycon <lubycon@gmail.com>",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lubycon/lubycon-utils"
