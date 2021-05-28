@@ -1,8 +1,8 @@
-module.exports = {
+ module.exports = {
   branches: [
     {
       "name": "main"
-    }
+    },
   ],
   plugins: [
     ["@semantic-release/commit-analyzer", {
@@ -19,15 +19,7 @@ module.exports = {
       }
     }],
     "@semantic-release/release-notes-generator",
-    ["@semantic-release/npm", {
-      "pkgRoot": "./dist"
-    }],
-    [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": "yarn copy-version",
-      }
-    ],
+    "@semantic-release/npm",
     [
       "@semantic-release/git",
       {

@@ -9,7 +9,7 @@ function init(config: LoggerInitializeConfig) {
   if (config.services.firebase != null) {
     initializeFirebase(config.services.firebase);
   }
-  if (config.services.amplitude) {
+  if (config.services.amplitude != null) {
     initializeAmplitude(config.services.amplitude);
   }
 }
