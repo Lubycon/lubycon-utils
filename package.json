@@ -3,7 +3,7 @@
   "description": "Utils which uses in Lubycon",
   "private": false,
   "sideEffects": false,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "keywords": [
     "utils"
   ],
