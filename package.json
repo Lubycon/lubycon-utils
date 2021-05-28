@@ -9,7 +9,7 @@
   ],
   "main": "dist/lubycon-utils.umd.js",
   "module": "dist/lubycon-utils.es5.js",
-  "typings": "dist/types/lubycon-utils.d.ts",
+  "typings": "dist/types/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=12.18.1"
+    "node": ">=10.15"
   },
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
