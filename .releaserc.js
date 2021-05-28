@@ -4,17 +4,7 @@
 module.exports = {
   branches: [
     {
-      "name": "master"
-    },
-    {
-      "name": "beta",
-      "channel": "beta",
-      "prerelease": "beta"
-    },
-    {
-      "name": "alpha",
-      "channel": "alpha",
-      "prerelease": "alpha"
+      "name": "main"
     }
   ],
   plugins: [
