@@ -7,10 +7,10 @@
   "keywords": [
     "utils"
   ],
+  "main": "dist/lubycon-utils.umd.js",
+  "module": "dist/lubycon-utils.es5.js",
+  "typings": "dist/types/lubycon-utils.d.ts",
   "publishConfig": {
-    "main": "dist/lubycon-utils.umd.js",
-    "module": "dist/lubycon-utils.es5.js",
-    "types": "dist/types/lubycon-utils.d.ts",
     "access": "public"
   },
   "files": [
