@@ -1,8 +1,10 @@
 {
   "name": "@lubycon/utils",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
-  "keywords": ["utils"],
+  "keywords": [
+    "utils"
+  ],
   "main": "dist/lubycon-utils.umd.js",
   "module": "dist/lubycon-utils.es5.js",
   "typings": "dist/types/lubycon-utils.d.ts",
