@@ -9,6 +9,7 @@ export function initializeFirebase(config: FirebaseConfig) {
   }
 
   firebase.initializeApp(config);
+  firebase.analytics();
   initialized = true;
 }
 
