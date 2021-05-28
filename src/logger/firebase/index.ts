@@ -1,4 +1,5 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/analytics';
 import { FirebaseConfig } from './models';
 
 let initialized = false;

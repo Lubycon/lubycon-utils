@@ -82,7 +82,7 @@ export interface Logger {
   event: ReturnType<typeof getCustomEvent>;
 }
 
-export const generateLogger = (logger: string): Logger => {
+const generateLogger = (logger: string): Logger => {
   return {
     view: getView(logger),
     click: getClick(logger),
@@ -93,4 +93,5 @@ export const generateLogger = (logger: string): Logger => {
 
 export default {
   init,
+  generateLogger,
 };
