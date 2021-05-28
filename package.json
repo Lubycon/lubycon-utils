@@ -1,14 +1,13 @@
 {
   "name": "@lubycon/utils",
+  "private": false,
   "version": "0.0.0",
   "description": "",
-  "keywords": ["utils"],
+  "keywords": ["utils", "lubycon"],
   "main": "dist/lubycon-utils.umd.js",
   "module": "dist/lubycon-utils.es5.js",
   "typings": "dist/types/lubycon-utils.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "author": "lubycon <lubycon@gmail.com>",
   "repository": {
     "type": "git",
