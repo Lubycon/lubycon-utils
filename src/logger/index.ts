@@ -17,7 +17,7 @@ const initializers: TypeMap<SupportedServices, (arg: any) => void> = {
 
 class Logger {
   private mode: LoggerEnvMode = 'production';
-  private services: TypeMap<SupportedServices, boolean> = {
+  private serviceAvailable: TypeMap<SupportedServices, boolean> = {
     firebase: false,
     amplitude: false,
   };
@@ -29,6 +29,7 @@ class Logger {
       const initializer = initializers[serviceKey];
       const config = services[serviceKey];
       initializer?.(config);
+      this.serviceAvailable[serviceKey] = true;
     }, []);
   }
 
@@ -43,7 +44,7 @@ class Logger {
     }
 
     // 추상화할 것
-    if (this.services.firebase === true) {
+    if (this.serviceAvailable.firebase === true) {
       firebase.analytics().logEvent(logName, {
         view,
         action,
@@ -51,7 +52,7 @@ class Logger {
       });
     }
 
-    if (this.services.amplitude === true) {
+    if (this.serviceAvailable.amplitude === true) {
       try {
         const amplitude = getAmplitudeClient();
         amplitude?.logEvent(logName, {
@@ -101,7 +102,7 @@ class Logger {
       });
   }
 
-  public generateLogger(loggerName: string) {
+  public getPageLogger(loggerName: string) {
     return {
       view: this.getView(loggerName),
       click: this.getClick(loggerName),
