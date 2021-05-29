@@ -38,7 +38,7 @@ logger.init({
 이후 `logger`가 제공하는 메소드를 사용하여 이벤트 로깅을 하시면 됩니다.
 
 ```js
-const myLogger = logger.generateLogger('화면 이름');
+const myLogger = logger.getPageLogger('화면 이름');
 
 logger.view(); // 뷰 이벤트
 logger.click('click_button'); // 클릭 이벤트
