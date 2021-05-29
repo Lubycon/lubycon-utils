@@ -1,97 +1,116 @@
 import firebase, { initializeFirebase } from './firebase';
-import { LoggerEnvMode, LoggerEventParams, LoggerInitializeConfig, LoggerParams } from './models';
+import {
+  LoggerEnvMode,
+  LoggerEventParams,
+  LoggerInitializeConfig,
+  LoggerParams,
+  SupportedServices,
+} from './models';
 import { initializeAmplitude, getAmplitudeClient } from './amplitude';
+import { TypeMap } from '../models/utils';
+import { getKeys } from '../utils';
 
-let mode: LoggerEnvMode = 'production';
-
-function init(config: LoggerInitializeConfig) {
-  mode = config.mode;
-  if (config.services.firebase != null) {
-    initializeFirebase(config.services.firebase);
-  }
-  if (config.services.amplitude != null) {
-    initializeAmplitude(config.services.amplitude);
-  }
-}
-
-const track = async (logName: string, { view, action, params }: LoggerParams) => {
-  if (mode === 'development') {
-    console.table({
-      view,
-      logName,
-      action,
-      ...params,
-    });
-  }
-
-  firebase.analytics().logEvent(logName, {
-    view,
-    action,
-    ...params,
-  });
-
-  try {
-    const amplitude = await getAmplitudeClient();
-    amplitude?.logEvent(logName, {
-      view,
-      action,
-      ...params,
-    });
-  } catch (e) {
-    return;
-  }
+const initializers: TypeMap<SupportedServices, (arg: any) => void> = {
+  firebase: initializeFirebase,
+  amplitude: initializeAmplitude,
 };
 
-const getView = (logger: string) => () =>
-  track(`${logger}_view`, {
-    view: logger,
-    action: 'view',
-  });
-
-const getClick =
-  (logger: string) =>
-  (logName: string, params: LoggerEventParams = {}) =>
-    track(logName, {
-      view: logger,
-      action: 'click',
-      params,
-    });
-
-const getImpression =
-  (logger: string) =>
-  (logName: string, params: LoggerEventParams = {}) =>
-    track(logName, {
-      view: logger,
-      action: 'impression',
-      params,
-    });
-
-const getCustomEvent =
-  (logger: string) =>
-  (logName: string, eventType: string, params: LoggerEventParams = {}) =>
-    track(logName, {
-      view: logger,
-      action: eventType,
-      params,
-    });
-
-export interface Logger {
-  view: ReturnType<typeof getView>;
-  click: ReturnType<typeof getClick>;
-  impression: ReturnType<typeof getImpression>;
-  event: ReturnType<typeof getCustomEvent>;
-}
-
-const generateLogger = (logger: string): Logger => {
-  return {
-    view: getView(logger),
-    click: getClick(logger),
-    impression: getImpression(logger),
-    event: getCustomEvent(logger),
+class Logger {
+  private mode: LoggerEnvMode = 'production';
+  private serviceAvailable: TypeMap<SupportedServices, boolean> = {
+    firebase: false,
+    amplitude: false,
   };
-};
 
-export default {
-  init,
-  generateLogger,
-};
+  public init({ mode, services }: LoggerInitializeConfig) {
+    this.mode = mode;
+
+    getKeys(services).forEach((serviceKey) => {
+      const initializer = initializers[serviceKey];
+      const config = services[serviceKey];
+      initializer?.(config);
+      this.serviceAvailable[serviceKey] = true;
+    }, []);
+  }
+
+  private track(logName: string, { view, action, params }: LoggerParams) {
+    if (this.mode === 'development') {
+      console.table({
+        view,
+        logName,
+        action,
+        ...params,
+      });
+    }
+
+    // 추상화할 것
+    if (this.serviceAvailable.firebase === true) {
+      firebase.analytics().logEvent(logName, {
+        view,
+        action,
+        ...params,
+      });
+    }
+
+    if (this.serviceAvailable.amplitude === true) {
+      try {
+        const amplitude = getAmplitudeClient();
+        amplitude?.logEvent(logName, {
+          view,
+          action,
+          ...params,
+        });
+      } catch (e) {
+        return;
+      }
+    }
+  }
+
+  private getView(loggerName: string) {
+    return () => {
+      this.track(`${loggerName}_view`, {
+        view: loggerName,
+        action: 'view',
+      });
+    };
+  }
+
+  private getClick(loggerName: string) {
+    return (logName: string, params: LoggerEventParams = {}) =>
+      this.track(logName, {
+        view: loggerName,
+        action: 'click',
+        params,
+      });
+  }
+
+  private getImpression(loggerName: string) {
+    return (logName: string, params: LoggerEventParams = {}) =>
+      this.track(logName, {
+        view: loggerName,
+        action: 'impression',
+        params,
+      });
+  }
+
+  private getCustomEvent(loggerName: string) {
+    return (logName: string, eventType: string, params: LoggerEventParams = {}) =>
+      this.track(logName, {
+        view: loggerName,
+        action: eventType,
+        params,
+      });
+  }
+
+  public getPageLogger(loggerName: string) {
+    return {
+      view: this.getView(loggerName),
+      click: this.getClick(loggerName),
+      impression: this.getImpression(loggerName),
+      event: this.getCustomEvent(loggerName),
+    };
+  }
+}
+
+const instance = new Logger();
+export default instance;
