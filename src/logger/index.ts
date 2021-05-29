@@ -67,10 +67,11 @@ class Logger {
   }
 
   private getView(loggerName: string) {
-    return () => {
+    return (params: LoggerEventParams = {}) => {
       this.track(`${loggerName}_view`, {
         view: loggerName,
         action: 'view',
+        params,
       });
     };
   }
