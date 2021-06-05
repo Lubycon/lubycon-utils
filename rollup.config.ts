@@ -21,8 +21,10 @@ export default {
   plugins: [
     json(),
     typescript({ useTsconfigDeclarationDir: true }),
-    commonjs(),
     resolve(),
+    commonjs({
+      include: 'node_modules/**',
+    }),
     sourceMaps(),
   ],
 };
