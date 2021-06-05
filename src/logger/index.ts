@@ -115,3 +115,5 @@ class Logger {
 
 const instance = new Logger();
 export default instance;
+
+export { FirebaseConfig } from './firebase/models';
