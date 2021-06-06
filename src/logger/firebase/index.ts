@@ -1,20 +1,27 @@
+import FirebaseNamespace from 'firebase/app';
 import { FirebaseConfig } from './models';
 
+type Firebase = typeof FirebaseNamespace;
+
 let initialized = false;
-let client: any = null;
+let client: Firebase | null = null;
 
-export function initializeFirebase(config: FirebaseConfig) {
-  if (initialized === true) {
-    return client;
-  }
+export function initializeFirebase(config: FirebaseConfig): Promise<Firebase | null> {
+  return new Promise(async (resolve) => {
+    if (initialized === true) {
+      resolve(client);
+      return;
+    }
 
-  const firebase = require('firebase/app'); // eslint-disable-line
-  require('firebase/analytics'); // eslint-disable-line
+    const firebaseModule = await import('firebase/app');
+    await import('firebase/analytics');
 
-  firebase.initializeApp(config);
-  firebase.analytics();
-  initialized = true;
-  client = firebase;
+    const firebaseClient = firebaseModule.default;
+    firebaseClient.initializeApp(config);
+    firebaseClient.analytics();
+    initialized = true;
+    client = firebaseClient;
 
-  return client;
+    resolve(client);
+  });
 }

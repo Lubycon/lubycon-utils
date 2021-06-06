@@ -10,7 +10,7 @@ import { initializeAmplitude } from './amplitude';
 import { TypeMap } from '../models/utils';
 import { getKeys } from '../utils';
 
-const initializers: TypeMap<SupportedServices, (arg: any) => void> = {
+const initializers: TypeMap<SupportedServices, (arg: any) => Promise<any>> = {
   firebase: initializeFirebase,
   amplitude: initializeAmplitude,
 };
@@ -29,10 +29,10 @@ class Logger {
   public init({ mode, services }: LoggerInitializeConfig) {
     this.mode = mode;
 
-    getKeys(services).forEach((serviceKey) => {
+    getKeys(services).forEach(async (serviceKey) => {
       const initializer = initializers[serviceKey];
       const config = services[serviceKey];
-      this.clients[serviceKey] = initializer?.(config);
+      this.clients[serviceKey] = await initializer?.(config);
       this.serviceAvailable[serviceKey] = true;
     }, []);
   }
