@@ -1,10 +1,15 @@
 import { AmplitudeClient } from 'amplitude-js';
+import { isServer } from '../../constants/env';
 
 let amplitudeClient: AmplitudeClient | null = null;
 let initialized = false;
 
 export const initializeAmplitude = (apiKey: string): Promise<AmplitudeClient | null> => {
   return new Promise(async (resolve) => {
+    if (isServer) {
+      resolve(null);
+    }
+
     if (initialized) {
       resolve(amplitudeClient);
 
