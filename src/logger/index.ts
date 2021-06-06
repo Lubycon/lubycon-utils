@@ -23,6 +23,10 @@ class Logger {
   };
 
   public init({ mode, services }: LoggerInitializeConfig) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     this.mode = mode;
 
     getKeys(services).forEach((serviceKey) => {
