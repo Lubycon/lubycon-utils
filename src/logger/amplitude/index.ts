@@ -21,11 +21,3 @@ export const initializeAmplitude = (apiKey: string): Promise<AmplitudeClient | n
       });
   });
 };
-
-export function getAmplitudeClient() {
-  if (amplitudeClient == null) {
-    console.error('Amplitude가 아직 초기화되지 않았습니다.');
-  }
-
-  return amplitudeClient;
-}

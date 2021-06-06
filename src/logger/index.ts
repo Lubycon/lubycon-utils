@@ -1,4 +1,3 @@
-import firebase, { initializeFirebase } from './firebase';
 import {
   LoggerEnvMode,
   LoggerEventParams,
@@ -6,7 +5,8 @@ import {
   LoggerParams,
   SupportedServices,
 } from './models';
-import { initializeAmplitude, getAmplitudeClient } from './amplitude';
+import { initializeFirebase } from './firebase';
+import { initializeAmplitude } from './amplitude';
 import { TypeMap } from '../models/utils';
 import { getKeys } from '../utils';
 
@@ -21,18 +21,18 @@ class Logger {
     firebase: false,
     amplitude: false,
   };
+  private clients: TypeMap<SupportedServices, any> = {
+    firebase: undefined,
+    amplitude: undefined,
+  };
 
   public init({ mode, services }: LoggerInitializeConfig) {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     this.mode = mode;
 
     getKeys(services).forEach((serviceKey) => {
       const initializer = initializers[serviceKey];
       const config = services[serviceKey];
-      initializer?.(config);
+      this.clients[serviceKey] = initializer?.(config);
       this.serviceAvailable[serviceKey] = true;
     }, []);
   }
@@ -49,7 +49,7 @@ class Logger {
 
     // 추상화할 것
     if (this.serviceAvailable.firebase === true) {
-      firebase.analytics().logEvent(logName, {
+      this.clients.firebase?.analytics().logEvent(logName, {
         view,
         action,
         ...params,
@@ -58,8 +58,7 @@ class Logger {
 
     if (this.serviceAvailable.amplitude === true) {
       try {
-        const amplitude = getAmplitudeClient();
-        amplitude?.logEvent(logName, {
+        this.clients.amplitude?.logEvent(logName, {
           view,
           action,
           ...params,
