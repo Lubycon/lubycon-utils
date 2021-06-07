@@ -7,7 +7,7 @@ import packageJSON from './package.json';
 
 export default {
   input: `src/index.ts`,
-  output: [{ dir: packageJSON.module, format: 'es', sourcemap: true }],
+  output: [{ dir: packageJSON.module, format: 'cjs', sourcemap: true }],
   external: [],
   watch: {
     include: 'src/**',
