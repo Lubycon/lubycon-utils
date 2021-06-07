@@ -9,6 +9,7 @@ import { initializeFirebase } from './firebase';
 import { initializeAmplitude } from './amplitude';
 import { TypeMap } from '../models/utils';
 import { getKeys } from '../utils';
+import { Defer, defer } from '../utils/promise';
 
 const initializers: TypeMap<SupportedServices, (arg: any) => Promise<any>> = {
   firebase: initializeFirebase,
@@ -17,10 +18,12 @@ const initializers: TypeMap<SupportedServices, (arg: any) => Promise<any>> = {
 
 class Logger {
   private mode: LoggerEnvMode = 'production';
-  private serviceAvailable: TypeMap<SupportedServices, boolean> = {
-    firebase: false,
-    amplitude: false,
+
+  private serviceAvailable: TypeMap<SupportedServices, Defer<boolean>> = {
+    firebase: defer(),
+    amplitude: defer(),
   };
+
   private clients: TypeMap<SupportedServices, any> = {
     firebase: undefined,
     amplitude: undefined,
@@ -29,15 +32,17 @@ class Logger {
   public init({ mode, services }: LoggerInitializeConfig) {
     this.mode = mode;
 
-    getKeys(services).forEach(async (serviceKey) => {
-      const initializer = initializers[serviceKey];
-      const config = services[serviceKey];
-      this.clients[serviceKey] = await initializer?.(config);
-      this.serviceAvailable[serviceKey] = true;
-    }, []);
+    return Promise.all(
+      getKeys(services).map(async (serviceKey) => {
+        const initializer = initializers[serviceKey];
+        const config = services[serviceKey];
+        this.clients[serviceKey] = await initializer?.(config);
+        this.serviceAvailable[serviceKey]?.resolve(config != null);
+      })
+    );
   }
 
-  private track(logName: string, { view, action, params }: LoggerParams) {
+  private async track(logName: string, { view, action, params }: LoggerParams) {
     if (this.mode === 'development') {
       console.table({
         view,
@@ -47,26 +52,31 @@ class Logger {
       });
     }
 
-    // 추상화할 것
-    if (this.serviceAvailable.firebase === true) {
-      this.clients.firebase?.analytics().logEvent(logName, {
-        view,
-        action,
-        ...params,
-      });
-    }
-
-    if (this.serviceAvailable.amplitude === true) {
-      try {
-        this.clients.amplitude?.logEvent(logName, {
-          view,
-          action,
-          ...params,
-        });
-      } catch (e) {
-        return;
-      }
-    }
+    // 추상화 할 것
+    await Promise.all([
+      (async () => {
+        if (await this.serviceAvailable.firebase?.promise) {
+          this.clients.firebase?.analytics().logEvent(logName, {
+            view,
+            action,
+            ...params,
+          });
+        }
+      })(),
+      (async () => {
+        if (await this.serviceAvailable.amplitude?.promise) {
+          try {
+            this.clients.amplitude?.logEvent(logName, {
+              view,
+              action,
+              ...params,
+            });
+          } catch (e) {
+            return;
+          }
+        }
+      })(),
+    ]);
   }
 
   private getView(loggerName: string) {

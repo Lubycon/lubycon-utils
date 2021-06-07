@@ -2,3 +2,7 @@
 export type TypeMap<T, Value> = {
   [K in keyof T]: Value;
 };
+
+export type Nullable<T> = {
+  [K in keyof T]: T[K] | null;
+};
