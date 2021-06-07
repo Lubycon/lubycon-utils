@@ -7,8 +7,8 @@
   "keywords": [
     "utils"
   ],
-  "main": "dist/lubycon-utils.umd.js",
-  "module": "dist/lubycon-utils.es5.js",
+  "main": "dist/index.js",
+  "module": "dist",
   "typings": "dist/types/index.d.ts",
   "publishConfig": {
     "access": "public"
@@ -28,7 +28,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts --inlineDynamicImports",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",

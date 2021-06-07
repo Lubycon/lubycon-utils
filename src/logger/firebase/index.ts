@@ -1,18 +1,10 @@
-// import FirebaseNamespace from 'firebase/app';
-import { isServer } from '../../constants/env';
 import { FirebaseConfig } from './models';
-
-// type Firebase = typeof FirebaseNamespace;
 
 let initialized = false;
 let client: any | null = null;
 
 export function initializeFirebase(config: FirebaseConfig): Promise<any | null> {
   return new Promise(async (resolve) => {
-    if (isServer) {
-      resolve(null);
-    }
-
     if (initialized === true) {
       resolve(client);
       return;
