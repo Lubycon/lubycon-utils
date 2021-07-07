@@ -3,6 +3,11 @@ import addHours from 'date-fns/addHours';
 import isBefore from 'date-fns/isBefore';
 import { isServer } from '../constants/env';
 
+interface LubyconStorageData<T> {
+  data: T;
+  expiry: string;
+}
+
 function canUseStorage() {
   if (isServer === true) {
     return false;
@@ -37,6 +42,10 @@ function getExpiry(expiryHour?: number) {
   }
 }
 
+function isLubyconUtilsItem<T>(item: LubyconStorageData<T> | T): item is LubyconStorageData<T> {
+  return 'data' in item && 'expiry' in item;
+}
+
 function printNoStorageWarningLog() {
   console.warn('로컬스토리지를 사용할 수 없는 환경입니다');
 }
@@ -50,7 +59,7 @@ export function setLocalStorageItem<T>(key: string, data: T, expiryHour?: number
     return;
   }
 
-  const payload = {
+  const payload: LubyconStorageData<T> = {
     data,
     expiry: getExpiry(expiryHour),
   };
@@ -72,14 +81,19 @@ export function getLocalStorageItem<T>(key: string): T | null {
     return null;
   }
 
-  const parsedPayload: { data: T; expiry: string } = JSON.parse(payload);
-  const now = new Date();
-  const expiry = new Date(parsedPayload.expiry);
-  if (isNaN(expiry.getTime()) || isBefore(now, expiry)) {
-    return parsedPayload.data;
+  const parsedPayload: LubyconStorageData<T> | T = JSON.parse(payload);
+  if (isLubyconUtilsItem(parsedPayload)) {
+    const now = new Date();
+    const expiry = new Date(parsedPayload.expiry);
+
+    if (isNaN(expiry.getTime()) || isBefore(now, expiry)) {
+      return parsedPayload.data;
+    } else {
+      window.localStorage.removeItem(key);
+      return null;
+    }
   } else {
-    window.localStorage.removeItem(key);
-    return null;
+    return parsedPayload;
   }
 }
 
