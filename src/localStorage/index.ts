@@ -96,6 +96,15 @@ export function removeLocalStorageItem(key: string) {
 }
 
 /**
+ * 로컬스토리지에서 데이터를 가져온 후 해당 데이터를 로컬스토리지에서 제거합니다.
+ */
+export function popLocalStorageItem<T>(key: string): T | null {
+  const data = getLocalStorageItem<T>(key);
+  removeLocalStorageItem(key);
+  return data;
+}
+
+/**
  * 로컬스토리지 내의 모든 데이터를 제거합니다.
  */
 export function clearLocalStorage() {
