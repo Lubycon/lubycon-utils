@@ -37,12 +37,16 @@ function getExpiry(expiryHour?: number) {
   }
 }
 
+function printNoStorageWarningLog() {
+  console.warn('로컬스토리지를 사용할 수 없는 환경입니다');
+}
+
 /**
  * 로컬스토리지에 데이터를 저장합니다. 3번째 인자 expiryHour로 데이터의 만료 시간을 지정할 수 있습니다.
  */
 export function setLocalStorageItem<T>(key: string, data: T, expiryHour?: number) {
   if (!canUseStorage()) {
-    console.warn('로컬스토리지를 사용할 수 없는 환경입니다');
+    printNoStorageWarningLog();
     return;
   }
 
@@ -59,7 +63,7 @@ export function setLocalStorageItem<T>(key: string, data: T, expiryHour?: number
  */
 export function getLocalStorageItem<T>(key: string): T | null {
   if (!canUseStorage()) {
-    console.warn('로컬스토리지를 사용할 수 없는 환경입니다');
+    printNoStorageWarningLog();
     return null;
   }
 
@@ -77,4 +81,28 @@ export function getLocalStorageItem<T>(key: string): T | null {
     window.localStorage.removeItem(key);
     return null;
   }
+}
+
+/**
+ * 로컬스토리지에서 데이터를 제거합니다.
+ */
+export function removeLocalStorageItem(key: string) {
+  if (!canUseStorage()) {
+    printNoStorageWarningLog();
+    return;
+  }
+
+  window.localStorage.removeItem(key);
+}
+
+/**
+ * 로컬스토리지 내의 모든 데이터를 제거합니다.
+ */
+export function clearLocalStorage() {
+  if (!canUseStorage()) {
+    printNoStorageWarningLog();
+    return;
+  }
+
+  window.localStorage.clear();
 }
