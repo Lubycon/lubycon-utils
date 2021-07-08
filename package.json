@@ -128,5 +128,8 @@
   "dependencies": {
     "amplitude-js": "^8.3.0",
     "firebase": "^8.6.3"
+  },
+  "peerDependencies": {
+    "date-fns": "^2.22.1"
   }
 }
