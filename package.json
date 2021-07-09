@@ -1,7 +1,6 @@
 {
   "name": "@lubycon/utils",
   "description": "Utils which uses in Lubycon",
-  "private": false,
   "sideEffects": false,
   "version": "1.4.0",
   "keywords": [
