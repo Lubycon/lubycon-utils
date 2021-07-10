@@ -80,6 +80,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["shelljs", "npm:0.8.4"],
             ["ts-jest", "virtual:0f16d7a51f7d60f95f418d333f8124a7bb1afb77755b20d1e9cb167183dd0a724784cd81710fc57a04ac2da8f020a10a6a96cae41013544250d8b7c45e533a4f#npm:23.10.5"],
             ["ts-node", "npm:7.0.1"],
+            ["tslib", "npm:2.3.0"],
             ["typescript", "patch:typescript@npm%3A3.9.10#builtin<compat/typescript>::version=3.9.10&hash=ddfc1b"]
           ],
           "linkType": "SOFT",
@@ -1080,6 +1081,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["shelljs", "npm:0.8.4"],
             ["ts-jest", "virtual:0f16d7a51f7d60f95f418d333f8124a7bb1afb77755b20d1e9cb167183dd0a724784cd81710fc57a04ac2da8f020a10a6a96cae41013544250d8b7c45e533a4f#npm:23.10.5"],
             ["ts-node", "npm:7.0.1"],
+            ["tslib", "npm:2.3.0"],
             ["typescript", "patch:typescript@npm%3A3.9.10#builtin<compat/typescript>::version=3.9.10&hash=ddfc1b"]
           ],
           "linkType": "SOFT",
