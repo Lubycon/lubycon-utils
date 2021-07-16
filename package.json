@@ -94,6 +94,7 @@
     "@types/node": "^10.11.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
+    "@yarnpkg/pnpify": "^3.0.0-rc.10",
     "colors": "^1.3.2",
     "commitizen": "^3.0.0",
     "coveralls": "^3.0.2",
