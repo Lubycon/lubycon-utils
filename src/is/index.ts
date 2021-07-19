@@ -20,24 +20,3 @@ export function isNumber(value: any): value is number {
 export function isBoolean(value: any): value is boolean {
   return typeof value === 'boolean';
 }
-
-interface Person {
-  name: string | number;
-}
-interface Evan extends Person {
-  name: string;
-}
-
-const person: Person = { name: 'evan' };
-
-if (is<Evan>(person, (v) => v.name === 'evan')) {
-  console.log(person); // Evan
-} else {
-  console.log(person); // Person
-}
-
-if (is<string>(person, (v) => typeof v.name === 'string')) {
-  // 뜬금없는 타입을 넣어버리면 인터섹션 타입으로 묶여버린다.
-  // 즉, 안전하지 않기 때문에 주의해서 사용해야 함.
-  console.log(person); // Person & string
-}
