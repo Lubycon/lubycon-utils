@@ -7,13 +7,13 @@ type QueryParam = Record<string, QueryParamValue>;
  * 맵을 인자로 받아서 쿼리스트링을 반환하는 함수입니다. 만약 맵 내부에 유효한 값이 없다면 빈 문자열을 반환합니다.
  *
  * @example
- * createQueryString({ foo: true, bar: 'hello', baz: '안녕' });
+ * stringifyQueryParams({ foo: true, bar: 'hello', baz: '안녕' });
  * // '?foo=true&bar=hello&%EC%95%88%EB%85%95'
  *
- * createQueryString({ foo: undefined });
+ * stringifyQueryParams({ foo: undefined });
  * // ''
  */
-export function createQueryString(params: QueryParam = {}) {
+export function stringifyQueryParams(params: QueryParam = {}) {
   const queryString = Object.entries(params)
     .filter(([, value]) => value != null)
     .map(([key, value]) => {
